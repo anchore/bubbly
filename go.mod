@@ -9,7 +9,7 @@ require (
 	github.com/charmbracelet/lipgloss v0.7.1
 	github.com/erikgeiser/promptkit v0.7.0
 	github.com/gkampitakis/go-snaps v0.4.0
-	github.com/stretchr/testify v1.8.2
+	github.com/stretchr/testify v1.8.3
 	github.com/wagoodman/go-partybus v0.0.0-20230516145632-8ccac152c651
 	github.com/wagoodman/go-progress v0.0.0-20220614130704-4b1c25a33c7c
 )
