@@ -82,6 +82,28 @@ func TestModel_View(t *testing.T) {
 			},
 		},
 		{
+			name: "respond to title width",
+			taskGen: func(tb testing.TB) Model {
+				prog, stage, tsk := subject(t)
+				// note: we set progress to have a total size to ensure it is hidden
+				prog.N, prog.Total = 100, 100
+				stage.Current = "done!"
+				tsk.TitleWidth = 20
+				return tsk
+			},
+		},
+		{
+			name: "hide stage on success",
+			taskGen: func(tb testing.TB) Model {
+				prog, stage, tsk := subject(t)
+				tsk.HideStageOnSuccess = true
+				// note: we set progress to have a total size to ensure it is hidden
+				prog.N, prog.Total = 100, 100
+				stage.Current = "done!"
+				return tsk
+			},
+		},
+		{
 			name: "successfully finished hides progress bar",
 			taskGen: func(tb testing.TB) Model {
 				prog, stage, tsk := subject(t)
@@ -110,7 +132,6 @@ func TestModel_View(t *testing.T) {
 				return tsk
 			},
 		},
-
 		{
 			name: "multiple hints",
 			taskGen: func(tb testing.TB) Model {
@@ -125,6 +146,7 @@ func TestModel_View(t *testing.T) {
 				prog, _, tsk := subject(t)
 				prog.SetCompleted()
 				prog.Err = errors.New("woops")
+				tsk.HideStageOnSuccess = false
 				return tsk
 			},
 		},
