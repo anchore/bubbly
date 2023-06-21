@@ -26,3 +26,11 @@
 [TestModel_View/error - 1]
  ✘ Failed at work :(                         [working]                                     at home
 ---
+
+[TestModel_View/hide_stage_on_success - 1]
+ ✔ Did work                                                                                at home
+---
+
+[TestModel_View/respond_to_title_width - 1]
+ ✔ Did work              [done!]                                                           at home
+---

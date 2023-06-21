@@ -43,6 +43,7 @@ type Model struct {
 
 	UpdateDuration        time.Duration
 	HideProgressOnSuccess bool
+	HideStageOnSuccess    bool
 
 	TitleStyle lipgloss.Style
 	// TitlePendingStyle lipgloss.Style
@@ -50,6 +51,8 @@ type Model struct {
 	ContextStyle lipgloss.Style
 	SuccessStyle lipgloss.Style
 	FailedStyle  lipgloss.Style
+	TitleWidth   int
+	HintEndCaps  []string
 
 	id       int
 	sequence int
@@ -101,12 +104,25 @@ func New(wg *sync.WaitGroup, opts ...Option) Model {
 		HintStyle:    lipgloss.NewStyle().Foreground(lipgloss.Color("#777777")),
 		SuccessStyle: lipgloss.NewStyle().Foreground(lipgloss.Color("10")), // 10 = high intensity green (ANSI 16 bit color code)
 		FailedStyle:  lipgloss.NewStyle().Foreground(lipgloss.Color("9")),  // 9 = high intensity red (ANSI 16 bit color code)
+		TitleWidth:   40,
+		HintEndCaps:  []string{"[", "]"},
 	}
 
 	for _, opt := range opts {
 		opt(&m)
 	}
 	return m
+}
+
+func (m Model) hintCap(end bool) string {
+	l := len(m.HintEndCaps)
+	if l == 0 {
+		return ""
+	}
+	if end {
+		return m.HintEndCaps[l-1]
+	}
+	return m.HintEndCaps[0]
 }
 
 // Init is the command that effectively starts the continuous update loop.
@@ -226,7 +242,7 @@ func (m Model) View() string {
 	}
 
 	if m.title != "" {
-		beforeProgress += m.TitleStyle.Width(40).Align(lipgloss.Left).Render(m.title) + "  "
+		beforeProgress += m.TitleStyle.Width(m.TitleWidth).Align(lipgloss.Left).Render(m.title) + "  "
 	}
 
 	progressBar := ""
@@ -239,10 +255,11 @@ func (m Model) View() string {
 
 	afterProgress := ""
 
-	if len(m.hints) > 0 {
+	showStage := (!m.completed || (m.completed && !m.HideStageOnSuccess)) && len(m.hints) > 0
+	if showStage {
 		var hints []string
 		for _, h := range m.hints {
-			hints = append(hints, fmt.Sprintf("[%s]", h))
+			hints = append(hints, fmt.Sprintf("%s%s%s", m.hintCap(false), h, m.hintCap(true)))
 		}
 		hintStr := strings.Join(hints, " ")
 		afterProgress += m.HintStyle.Render(hintStr) + "  "
