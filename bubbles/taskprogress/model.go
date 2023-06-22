@@ -44,6 +44,7 @@ type Model struct {
 	UpdateDuration        time.Duration
 	HideProgressOnSuccess bool
 	HideStageOnSuccess    bool
+	HideOnSuccess         bool
 
 	TitleStyle lipgloss.Style
 	// TitlePendingStyle lipgloss.Style
@@ -139,7 +140,7 @@ func (m Model) Init() tea.Cmd {
 				// will ignore messages that don't contain ID by default.
 				ID: m.id,
 
-				sequence: m.sequence,
+				Sequence: m.sequence,
 			}
 		},
 		m.Spinner.Tick,
@@ -158,6 +159,11 @@ func (m Model) Init() tea.Cmd {
 // ID returns the spinner's unique ID.
 func (m Model) ID() int {
 	return m.id
+}
+
+// ID returns the spinner's unique ID.
+func (m Model) Sequence() int {
+	return m.sequence
 }
 
 // Update is the Tea update function.
@@ -230,6 +236,9 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 // View renders the model's view.
 func (m Model) View() string {
+	if m.completed && m.HideOnSuccess {
+		return ""
+	}
 	beforeProgress := " "
 	if m.completed {
 		if m.err != nil {
@@ -283,7 +292,7 @@ func (m Model) queueNextTick(id, sequence int) tea.Cmd {
 		return TickMsg{
 			Time:     t,
 			ID:       id,
-			sequence: sequence,
+			Sequence: sequence,
 		}
 	})
 }
@@ -298,7 +307,7 @@ func (m *Model) handleTick(msg TickMsg) tea.Cmd {
 	// If a sequence is set, and it's not the one we expect, reject the message.
 	// This prevents the spinner from receiving too many messages and
 	// thus spinning too fast.
-	if msg.sequence > 0 && msg.sequence != m.sequence {
+	if msg.Sequence > 0 && msg.Sequence != m.sequence {
 		return nil
 	}
 
