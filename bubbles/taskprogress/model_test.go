@@ -125,6 +125,17 @@ func TestModel_View(t *testing.T) {
 			},
 		},
 		{
+			name: "successfully can hide the entire line",
+			taskGen: func(tb testing.TB) Model {
+				prog, stage, tsk := subject(t)
+				tsk.HideOnSuccess = true
+				// note: we set progress to have a total size to ensure it is hidden
+				prog.N, prog.Total = 100, 100
+				stage.Current = "done!"
+				return tsk
+			},
+		},
+		{
 			name: "no context",
 			taskGen: func(tb testing.TB) Model {
 				_, _, tsk := subject(t)
@@ -158,7 +169,7 @@ func TestModel_View(t *testing.T) {
 			require.True(t, ok)
 			got := testutil.RunModel(t, tsk, tt.iterations, TickMsg{
 				Time:     time.Now(),
-				sequence: tsk.sequence,
+				Sequence: tsk.sequence,
 				ID:       tsk.id,
 			})
 			t.Log(got)
