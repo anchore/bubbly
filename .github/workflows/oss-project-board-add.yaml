@@ -8,12 +8,6 @@ on:
       - transferred
       - labeled
 
-  pull_request:
-    types:
-      - labeled
-      - opened
-      - reopened
-
 jobs:
 
   run:
