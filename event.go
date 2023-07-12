@@ -5,13 +5,28 @@ import (
 	"github.com/wagoodman/go-partybus"
 )
 
-var _ EventHandler = (*EventDispatcher)(nil)
+var (
+	_ EventHandler = (*EventDispatcher)(nil)
+	_ interface {
+		EventHandler
+		MessageListener
+		HandleWaiter
+	} = (*HandlerCollection)(nil)
+)
 
 type EventHandlerFn func(partybus.Event) []tea.Model
 
 type EventHandler interface {
 	partybus.Responder
 	Handle(partybus.Event) []tea.Model
+}
+
+type MessageListener interface {
+	OnMessage(tea.Msg)
+}
+
+type HandleWaiter interface {
+	Wait()
 }
 
 type EventDispatcher struct {
@@ -45,4 +60,50 @@ func (d EventDispatcher) Handle(e partybus.Event) []tea.Model {
 		return fn(e)
 	}
 	return nil
+}
+
+type HandlerCollection struct {
+	handlers []EventHandler
+}
+
+func NewHandlerCollection(handlers ...EventHandler) *HandlerCollection {
+	return &HandlerCollection{
+		handlers: handlers,
+	}
+}
+
+func (h *HandlerCollection) Append(handlers ...EventHandler) {
+	h.handlers = append(h.handlers, handlers...)
+}
+
+func (h HandlerCollection) RespondsTo() []partybus.EventType {
+	var ret []partybus.EventType
+	for _, handler := range h.handlers {
+		ret = append(ret, handler.RespondsTo()...)
+	}
+	return ret
+}
+
+func (h HandlerCollection) Handle(event partybus.Event) []tea.Model {
+	var ret []tea.Model
+	for _, handler := range h.handlers {
+		ret = append(ret, handler.Handle(event)...)
+	}
+	return ret
+}
+
+func (h HandlerCollection) OnMessage(msg tea.Msg) {
+	for _, handler := range h.handlers {
+		if listener, ok := handler.(MessageListener); ok {
+			listener.OnMessage(msg)
+		}
+	}
+}
+
+func (h HandlerCollection) Wait() {
+	for _, handler := range h.handlers {
+		if listener, ok := handler.(HandleWaiter); ok {
+			listener.Wait()
+		}
+	}
 }
