@@ -2,11 +2,9 @@ package taskprogress
 
 import (
 	"errors"
-	"reflect"
 	"sync"
 	"testing"
 	"time"
-	"unsafe"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/gkampitakis/go-snaps/snaps"
@@ -181,7 +179,7 @@ func TestModel_View(t *testing.T) {
 
 func Test_WaitGroupDone(t *testing.T) {
 	waitGroupDone := func(_ Model, wg *sync.WaitGroup) {
-		require.Equal(t, int32(0), waitCount(wg))
+		wg.Wait()
 	}
 
 	tests := []struct {
@@ -219,27 +217,26 @@ func Test_WaitGroupDone(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			model, wg := tt.taskGen(t)
-			_ = testutil.RunModel(t, model, 0, TickMsg{
-				Time:     time.Now(),
-				Sequence: model.sequence,
-				ID:       model.id,
-			})
-			tt.validate(model, wg)
+			timeout := time.After(5 * time.Second)
+			done := make(chan bool)
+
+			go func() {
+				model, wg := tt.taskGen(t)
+				_ = testutil.RunModel(t, model, 0, TickMsg{
+					Time:     time.Now(),
+					Sequence: model.sequence,
+					ID:       model.id,
+				})
+				tt.validate(model, wg)
+
+				done <- true
+			}()
+
+			select {
+			case <-timeout:
+				t.Fatal("test didn't finish in time")
+			case <-done:
+			}
 		})
 	}
-}
-
-func waitCount(wg *sync.WaitGroup) int32 {
-	v := reflect.ValueOf(wg).Elem()
-	v = v.FieldByName("state1")
-	state1 := v.Uint()
-
-	// this is from waitgroup.go state() function:
-	if unsafe.Alignof(state1) != 8 && uintptr(unsafe.Pointer(&state1))%8 != 0 {
-		state := (*[3]uint32)(unsafe.Pointer(&state1))
-		state1 = *(*uint64)(unsafe.Pointer(&state[1]))
-	}
-
-	return int32(state1 >> 32)
 }
