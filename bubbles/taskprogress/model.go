@@ -237,6 +237,7 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 // View renders the model's view.
 func (m Model) View() string {
 	if m.completed && m.HideOnSuccess {
+		m.done()
 		return ""
 	}
 	beforeProgress := " "
