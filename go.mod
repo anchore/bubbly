@@ -6,7 +6,7 @@ require (
 	github.com/acarl005/stripansi v0.0.0-20180116102854-5a71ef0e047d
 	github.com/charmbracelet/bubbles v0.11.0
 	github.com/charmbracelet/bubbletea v0.22.1
-	github.com/charmbracelet/lipgloss v0.9.0
+	github.com/charmbracelet/lipgloss v0.9.1
 	github.com/erikgeiser/promptkit v0.7.0
 	github.com/gkampitakis/go-snaps v0.4.11
 	github.com/stretchr/testify v1.8.4
