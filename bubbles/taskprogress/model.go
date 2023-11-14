@@ -13,12 +13,16 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/wagoodman/go-progress"
+
+	"github.com/anchore/bubbly"
 )
 
 const (
 	checkMark = "✔"
 	xMark     = "✘"
 )
+
+var _ bubbly.VisibleModel = (*Model)(nil)
 
 type Model struct {
 	// ui components (view models)
@@ -147,10 +151,6 @@ func (m Model) Init() tea.Cmd {
 		m.ProgressBar.Init(),
 	}
 
-	// if m.progressor != nil {
-	//	cmds = append(cmds, m.ProgressBar.Init())
-	//}
-
 	return tea.Batch(
 		cmds...,
 	)
@@ -161,7 +161,7 @@ func (m Model) ID() int {
 	return m.id
 }
 
-// ID returns the spinner's unique ID.
+// Sequence returns the spinner's current sequence number.
 func (m Model) Sequence() int {
 	return m.sequence
 }
@@ -234,9 +234,21 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 }
 
+func (m Model) IsVisible() bool {
+	isDoneAndHidden := m.completed && m.HideOnSuccess
+	if isDoneAndHidden {
+		// it might be that the consumer will not invoke View() again based on
+		// this response, in which case we need to ensure that the done() function
+		// in invoked to release resources
+		m.done()
+	}
+
+	return !(isDoneAndHidden)
+}
+
 // View renders the model's view.
 func (m Model) View() string {
-	if m.completed && m.HideOnSuccess {
+	if !m.IsVisible() {
 		m.done()
 		return ""
 	}
