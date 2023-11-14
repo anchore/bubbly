@@ -14,11 +14,15 @@ var (
 	} = (*HandlerCollection)(nil)
 )
 
-type EventHandlerFn func(partybus.Event) []tea.Model
+type EventHandlerFn func(partybus.Event) ([]tea.Model, tea.Cmd)
 
 type EventHandler interface {
 	partybus.Responder
-	Handle(partybus.Event) []tea.Model
+	// Handle optionally generates new models and commands in response to the given event. It might be that the event
+	// has an effect on the system, but the model is managed by a sub-component, in which case no new model would be
+	// returned but the Init() call on the managed model would return commands that should be executed in the context
+	// of the application lifecycle.
+	Handle(partybus.Event) ([]tea.Model, tea.Cmd)
 }
 
 type MessageListener interface {
@@ -55,11 +59,11 @@ func (d EventDispatcher) RespondsTo() []partybus.EventType {
 	return d.types
 }
 
-func (d EventDispatcher) Handle(e partybus.Event) []tea.Model {
+func (d EventDispatcher) Handle(e partybus.Event) ([]tea.Model, tea.Cmd) {
 	if fn, ok := d.dispatch[e.Type]; ok {
 		return fn(e)
 	}
-	return nil
+	return nil, nil
 }
 
 type HandlerCollection struct {
@@ -84,12 +88,17 @@ func (h HandlerCollection) RespondsTo() []partybus.EventType {
 	return ret
 }
 
-func (h HandlerCollection) Handle(event partybus.Event) []tea.Model {
-	var ret []tea.Model
+func (h HandlerCollection) Handle(event partybus.Event) ([]tea.Model, tea.Cmd) {
+	var (
+		newModels []tea.Model
+		newCmd    tea.Cmd
+	)
 	for _, handler := range h.handlers {
-		ret = append(ret, handler.Handle(event)...)
+		mods, cmd := handler.Handle(event)
+		newModels = append(newModels, mods...)
+		newCmd = tea.Batch(newCmd, cmd)
 	}
-	return ret
+	return newModels, newCmd
 }
 
 func (h HandlerCollection) OnMessage(msg tea.Msg) {
