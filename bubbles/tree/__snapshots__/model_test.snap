@@ -1,0 +1,102 @@
+
+[TestModel_View/gocase - 1]
+└──a
+   └──a-a
+---
+
+[TestModel_View/sibling_branches_(one_extra_level) - 1]
+├──a
+│  ├──a-a
+│  └──a-b
+└──b
+   └──b-a
+---
+
+[TestModel_View/sibling_branches_(lots_of_extra_levels) - 1]
+├──a
+│  ├──a-a
+│  ├──a-b
+│  │  ├──a-b-a
+│  │  ├──a-b-b
+│  │  └──a-b-c
+│  ├──a-c
+│  │  └──a-c-a
+│  └──a-d
+└──b
+   ├──b-a
+   │  ├──b-a-a
+   │  │  └──b-a-a-a
+   │  │     └──b-a-a-a-a
+   │  └──b-a-b
+   └──b-b
+---
+
+[TestModel_View/multiline_node - 1]
+├──a
+│  more a...
+│  ├──a-a
+│  │  a-a continued...
+│  │  more a-a!
+│  └──a-b
+└──b
+   more b...
+   └──b-a
+---
+
+[TestModel_View/padded_multiline_node - 1]
+├──a
+│  more a...
+│  │  
+│  ├──a-a
+│  │  a-a continued...
+│  │  more a-a!
+│  │  
+│  ├──a-b
+│  ├──a-c
+│  └──a-d
+└──b
+   more b...
+   │  
+   └──b-a
+---
+
+[TestModel_View/hidden_nodes - 1]
+└──a
+   └──a-a
+---
+
+
+[TestModel_View/margin - 1]
+   ├──a
+   │  ├──a-a
+   │  └──a-b
+   └──b
+      └──b-a
+---
+
+[TestModel_View/roots_without_prefix - 1]
+a
+├──a-a
+└──a-b
+b
+└──b-a
+---
+
+[TestModel_View/horizontal_padding - 1]
+ ✔ a
+   ├── ✔ a-a
+   ├── ✔ a-b
+   │     ├── ✔ a-b-a
+   │     ├── ✔ a-b-b
+   │     └── ✔ a-b-c
+   ├── ⠼ a-c
+   │     └── ⠼ a-c-a
+   └── ⠼ a-d
+ ⠼ b
+   ├── ⠼ b-a
+   │     ├── ⠼ b-a-a
+   │     │     └── ⠼ b-a-a-a
+   │     │           └── ⠼ b-a-a-a-a
+   │     └── ⠼ b-a-b
+   └── ⠼ b-b
+---
