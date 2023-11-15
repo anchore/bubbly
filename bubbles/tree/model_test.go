@@ -234,22 +234,22 @@ func TestModel_View(t *testing.T) {
 				subject.Padding = "   "
 				subject.RootsWithoutPrefix = true
 
-				// ├─ a
-				// │  ├─ a-a
-				// │  ├─ a-b
-				// │  │  ├─ a-b-a
-				// │  │  ├─ a-b-b
-				// │  │  └─ a-b-c
-				// │  ├─ a-c
-				// │  │  └─ a-c-a
-				// │  └─ a-d
-				// └─ b
-				//    ├─ b-a
-				//    │  ├─ b-a-a
-				//    │  │  └─ b-a-a-a
-				//    │  │     └─ b-a-a-a-a
-				//    │  └─ b-a-b
-				//    └─ b-b
+				// ✔ a
+				//   ├── ✔ a-a
+				//   ├── ✔ a-b
+				//   │     ├── ✔ a-b-a
+				//   │     ├── ✔ a-b-b
+				//   │     └── ✔ a-b-c
+				//   ├── ⠼ a-c
+				//   │     └── ⠼ a-c-a
+				//   └── ⠼ a-d
+				// ⠼ b
+				//   ├── ⠼ b-a
+				//   │     ├── ⠼ b-a-a
+				//   │     │     └── ⠼ b-a-a-a
+				//   │     │           └── ⠼ b-a-a-a-a
+				//   │     └── ⠼ b-a-b
+				//   └── ⠼ b-b
 
 				require.NoError(t, subject.Add("", "a", dummyViewer{state: " ✔ a"}))
 				require.NoError(t, subject.Add("a", "a-a", dummyViewer{state: " ✔ a-a"}))
