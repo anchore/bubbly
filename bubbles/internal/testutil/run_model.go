@@ -33,6 +33,9 @@ func RunModel(_ testing.TB, m tea.Model, iterations int, message tea.Msg) string
 }
 
 func flatten(p tea.Msg) (msgs []tea.Msg) {
+	if p == nil {
+		return nil
+	}
 	if reflect.TypeOf(p).Name() == "batchMsg" {
 		partials := extractBatchMessages(p)
 		for _, m := range partials {
