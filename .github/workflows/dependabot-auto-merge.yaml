@@ -39,7 +39,7 @@ jobs:
           PR_URL: ${{github.event.pull_request.html_url}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       - name: Disable auto-merge if human modified PR
-        if: steps.pr_author.human_pushed == "true"
+        if: steps.pr_author.human_pushed == 'true'
         run: |
           echo "disabling auto-merge due to non-dependabot push"
           gh pr merge --disable-auto "$PR_URL"
