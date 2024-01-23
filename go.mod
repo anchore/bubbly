@@ -10,7 +10,7 @@ require (
 	github.com/charmbracelet/bubbletea v0.25.0
 	github.com/charmbracelet/lipgloss v0.9.1
 	github.com/erikgeiser/promptkit v0.9.0
-	github.com/gkampitakis/go-snaps v0.4.12
+	github.com/gkampitakis/go-snaps v0.5.0
 	github.com/scylladb/go-set v1.0.2
 	github.com/stretchr/testify v1.8.4
 	github.com/wagoodman/go-partybus v0.0.0-20230516145632-8ccac152c651
@@ -30,7 +30,7 @@ require (
 	github.com/kr/pretty v0.3.1 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/lucasb-eyer/go-colorful v1.2.0 // indirect
-	github.com/maruel/natural v1.1.0 // indirect
+	github.com/maruel/natural v1.1.1 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect
 	github.com/mattn/go-localereader v0.0.2-0.20220822084749-2491eb6c1c75 // indirect
 	github.com/mattn/go-runewidth v0.0.15 // indirect
@@ -41,7 +41,7 @@ require (
 	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
-	github.com/rogpeppe/go-internal v1.11.0 // indirect
+	github.com/rogpeppe/go-internal v1.12.0 // indirect
 	github.com/tidwall/gjson v1.17.0 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect
