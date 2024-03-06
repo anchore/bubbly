@@ -8,7 +8,7 @@ require (
 	github.com/acarl005/stripansi v0.0.0-20180116102854-5a71ef0e047d
 	github.com/charmbracelet/bubbles v0.18.0
 	github.com/charmbracelet/bubbletea v0.25.0
-	github.com/charmbracelet/lipgloss v0.9.1
+	github.com/charmbracelet/lipgloss v0.10.0
 	github.com/erikgeiser/promptkit v0.9.0
 	github.com/gkampitakis/go-snaps v0.5.2
 	github.com/scylladb/go-set v1.0.2
@@ -40,7 +40,7 @@ require (
 	github.com/muesli/termenv v0.15.2 // indirect
 	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/rivo/uniseg v0.4.6 // indirect
+	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/rogpeppe/go-internal v1.12.0 // indirect
 	github.com/tidwall/gjson v1.17.0 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
