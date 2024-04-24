@@ -10,7 +10,7 @@ require (
 	github.com/charmbracelet/bubbletea v0.25.0
 	github.com/charmbracelet/lipgloss v0.10.0
 	github.com/erikgeiser/promptkit v0.9.0
-	github.com/gkampitakis/go-snaps v0.5.3
+	github.com/gkampitakis/go-snaps v0.5.4
 	github.com/scylladb/go-set v1.0.2
 	github.com/stretchr/testify v1.9.0
 	github.com/wagoodman/go-partybus v0.0.0-20230516145632-8ccac152c651
