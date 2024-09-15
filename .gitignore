@@ -1,8 +1,16 @@
 go.work
 go.work.sum
 
-CHANGELOG.md
-VERSION
+# tools and aux data
+.tool
+.tmp
+.task
+
+# release info
+/CHANGELOG.md
+/VERSION
+
+# archives and fixtures
 /test/results
 /dist
 /snapshot

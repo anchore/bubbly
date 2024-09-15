@@ -1,8 +1,6 @@
 module github.com/anchore/bubbly
 
-go 1.21.0
-
-toolchain go1.21.1
+go 1.21.1
 
 require (
 	github.com/acarl005/stripansi v0.0.0-20180116102854-5a71ef0e047d
