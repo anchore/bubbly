@@ -5,7 +5,7 @@ go 1.21.1
 require (
 	github.com/acarl005/stripansi v0.0.0-20180116102854-5a71ef0e047d
 	github.com/charmbracelet/bubbles v0.20.0
-	github.com/charmbracelet/bubbletea v1.2.0
+	github.com/charmbracelet/bubbletea v1.2.1
 	github.com/charmbracelet/lipgloss v1.0.0
 	github.com/erikgeiser/promptkit v0.9.0
 	github.com/gkampitakis/go-snaps v0.5.7
