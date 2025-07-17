@@ -68,7 +68,7 @@ func (f Frame) Init() tea.Cmd {
 	return nil
 }
 
-func (f Frame) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (f *Frame) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	if msg, ok := msg.(tea.WindowSizeMsg); ok {
 		f.windowSize = msg
 	}
