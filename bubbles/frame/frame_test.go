@@ -60,7 +60,7 @@ func TestFrame_Update_PruneTerminalElement(t *testing.T) {
 	frame.AppendModel(model)
 
 	m, _ := frame.Update(nil)
-	actual := m.(Frame)
+	actual := m.(*Frame)
 
 	assert.Empty(t, actual.models)
 }
@@ -72,7 +72,7 @@ func TestFrame_Update_HideVisibleElement(t *testing.T) {
 	frame.AppendModel(model)
 
 	m, _ := frame.Update(nil)
-	actual := m.(Frame)
+	actual := m.(*Frame)
 
 	require.NotEmpty(t, actual.models)
 	assert.True(t, actual.models[0].hidden)
@@ -85,7 +85,7 @@ func TestFrame_Update_ImprintImprintableElement(t *testing.T) {
 	frame.AppendModel(model)
 
 	m, cmds := frame.Update(nil)
-	actual := m.(Frame)
+	actual := m.(*Frame)
 
 	assert.True(t, actual.models[0].expired)
 	assert.NotNil(t, cmds)
@@ -98,7 +98,7 @@ func TestFrame_Update_UpdateElement(t *testing.T) {
 	frame.AppendModel(model)
 
 	m, cmds := frame.Update(nil)
-	actual := m.(Frame)
+	actual := m.(*Frame)
 
 	assert.Nil(t, cmds)
 	assert.True(t, actual.models[0].model.(mockModel).updateCalled)
