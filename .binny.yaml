@@ -1,16 +1,28 @@
+# only pull in version updates that were released more than a week ago (low-pass filter for quickly-retracted releases)
+cooldown: 7d
 tools:
   # we want to use a pinned version of binny to manage the toolchain (so binny manages itself!)
   - name: binny
     version:
-      want: v0.8.0
+      want: v0.13.0
+      cooldown: 0 # no cooldown period for internal tools
     method: github-release
     with:
       repo: anchore/binny
 
+  # used at release to generate the changelog
+  - name: chronicle
+    version:
+      want: v0.8.0
+      cooldown: 0 # no cooldown period for internal tools
+    method: github-release
+    with:
+      repo: anchore/chronicle
+
   # used for linting
   - name: golangci-lint
     version:
-      want: v1.61.0
+      want: v2.11.4
     method: github-release
     with:
       repo: golangci/golangci-lint
@@ -31,10 +43,42 @@ tools:
     with:
       repo: wagoodman/go-bouncer
 
+  # used for showing the changelog at release
+  - name: glow
+    version:
+      want: v2.1.1
+    method: github-release
+    with:
+      repo: charmbracelet/glow
+
+  # used to release
+  - name: goreleaser
+    version:
+      want: v2.15.2
+    method: github-release
+    with:
+      repo: goreleaser/goreleaser
+
   # used for running all local and CI tasks
   - name: task
     version:
-      want: v3.39.0
+      want: v3.49.1
     method: github-release
     with:
       repo: go-task/task
+
+  # used for triggering a release
+  - name: gh
+    version:
+      want: v2.89.0
+    method: github-release
+    with:
+      repo: cli/cli
+
+  # used for signing the checksums file at release
+  - name: cosign
+    version:
+      want: v3.0.5
+    method: github-release
+    with:
+      repo: sigstore/cosign
