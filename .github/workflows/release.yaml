@@ -2,6 +2,7 @@ name: "Release"
 
 permissions:
   contents: read
+  checks: read
 
 concurrency:
   group: release
