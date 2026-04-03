@@ -1,5 +1,8 @@
+# local development
 go.work
 go.work.sum
+/specs
+/hack
 
 # tools and aux data
 .tool

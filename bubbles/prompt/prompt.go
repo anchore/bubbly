@@ -71,7 +71,7 @@ func (m *Prompt) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				// log.Errorf("unable to get prompt value: %+v", err)
 				return m, nil
 			}
-			if err := m.PromptWriter.Respond(v); err != nil {
+			if err := m.Respond(v); err != nil {
 				// log.Errorf("unable to set prompt: %+v", err)
 				return m, nil
 			}
@@ -91,7 +91,7 @@ func (m *Prompt) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m *Prompt) RunPrompt() (string, error) {
 	value, err := m.TextInput.RunPrompt()
 	if err == nil {
-		err = m.PromptWriter.Respond(value)
+		err = m.Respond(value)
 	}
 	return value, err
 }
