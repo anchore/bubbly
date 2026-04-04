@@ -23,7 +23,6 @@ jobs:
       version: ${{ github.event.inputs.version }}
 
   check-gate:
-    needs: [version-available]
     uses: anchore/workflows/.github/workflows/check-gate.yaml@91139bea23527e94db5a1e9e9b77ad2975417930 # v0.2.0
     with:
       checks: '["Static analysis", "Unit tests"]'

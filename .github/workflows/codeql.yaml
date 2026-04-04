@@ -43,10 +43,6 @@ jobs:
           - language: go
             build-mode: manual
 
-          # Python is interpreted — CodeQL extracts directly from source.
-          - language: python
-            build-mode: none
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
