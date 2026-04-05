@@ -12,10 +12,6 @@ vars:
   CHANGELOG: CHANGELOG.md
   NEXT_VERSION: VERSION
 
-  RELEASE_CMD: "{{ .TOOL_DIR }}/goreleaser release --clean --release-notes {{ .CHANGELOG }}"
-  VERSION:
-    sh: git describe --dirty --always --tags
-
   # tools
   BOUNCER: "{{ .TOOL_DIR }}/bouncer"
   GOIMPORTS: "{{ .TOOL_DIR }}/gosimports"
@@ -25,7 +21,6 @@ vars:
   # test details
   # the quality gate lower threshold for unit test total % coverage (by function statements)
   COVERAGE_THRESHOLD: 55
-
 
 tasks:
 
@@ -142,7 +137,6 @@ tasks:
     deps: [tools]
     cmd: "{{ .BOUNCER }} check ./..."
 
-
   ## Testing tasks #################################
 
   unit:
@@ -151,7 +145,6 @@ tasks:
     cmds:
       - "go test -coverprofile {{ .TMP_DIR }}/unit-coverage-details.txt ./..."
       - .github/scripts/coverage.py {{ .COVERAGE_THRESHOLD }} {{ .TMP_DIR }}/unit-coverage-details.txt
-
 
   ## Build-related targets #################################
 
@@ -164,22 +157,3 @@ tasks:
     cmds:
       - "{{ .TOOL_DIR }}/chronicle -vv -n --version-file {{ .NEXT_VERSION }} > {{ .CHANGELOG }}"
       - "{{ .TOOL_DIR }}/glow {{ .CHANGELOG }}"
-
-
-  ## CI-only targets #################################
-
-  ci-check:
-    # desc: "[CI only] Are you in CI?"
-    requires:
-      vars: [CI]
-
-  ci-release:
-    # desc: "[CI only] Create a release"
-    deps: [tools]
-    cmds:
-      - task: ci-check
-      - "{{ .TOOL_DIR }}/chronicle -vvv > {{ .CHANGELOG }}"
-      - cmd: "cat {{ .CHANGELOG }}"
-        silent: true
-      - "{{ .RELEASE_CMD }}"
-

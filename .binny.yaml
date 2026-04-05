@@ -50,14 +50,6 @@ tools:
     with:
       repo: charmbracelet/glow
 
-  # used to release
-  - name: goreleaser
-    version:
-      want: v2.15.2
-    method: github-release
-    with:
-      repo: goreleaser/goreleaser
-
   # used for running all local and CI tasks
   - name: task
     version:
@@ -65,19 +57,3 @@ tools:
     method: github-release
     with:
       repo: go-task/task
-
-  # used for triggering a release
-  - name: gh
-    version:
-      want: v2.89.0
-    method: github-release
-    with:
-      repo: cli/cli
-
-  # used for signing the checksums file at release
-  - name: cosign
-    version:
-      want: v3.0.5
-    method: github-release
-    with:
-      repo: sigstore/cosign
