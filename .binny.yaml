@@ -1,6 +1,5 @@
 # only pull in version updates that were released more than a week ago (low-pass filter for quickly-retracted releases)
 cooldown: 7d
-
 tools:
   # we want to use a pinned version of binny to manage the toolchain (so binny manages itself!)
   - name: binny
@@ -57,3 +56,11 @@ tools:
     method: github-release
     with:
       repo: go-task/task
+
+  # used for creating GitHub releases in CI
+  - name: gh
+    version:
+      want: v2.89.0
+    method: github-release
+    with:
+      repo: cli/cli

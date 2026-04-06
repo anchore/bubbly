@@ -14,6 +14,9 @@ vars:
 
   # tools
   BOUNCER: "{{ .TOOL_DIR }}/bouncer"
+  CHRONICLE: "{{ .TOOL_DIR }}/chronicle"
+  GH: "{{ .TOOL_DIR }}/gh"
+  GLOW: "{{ .TOOL_DIR }}/glow"
   GOIMPORTS: "{{ .TOOL_DIR }}/gosimports"
   GOLANGCILINT: "{{ .TOOL_DIR }}/golangci-lint"
   BINNY: "{{ .TOOL_DIR }}/binny"
@@ -155,5 +158,17 @@ tasks:
       - "{{ .CHANGELOG }}"
       - "{{ .NEXT_VERSION }}"
     cmds:
-      - "{{ .TOOL_DIR }}/chronicle -vv -n --version-file {{ .NEXT_VERSION }} > {{ .CHANGELOG }}"
-      - "{{ .TOOL_DIR }}/glow {{ .CHANGELOG }}"
+      - "{{ .CHRONICLE }} -vv -n --version-file {{ .NEXT_VERSION }} > {{ .CHANGELOG }}"
+      - "{{ .GLOW }} -w 0 {{ .CHANGELOG }}"
+
+  ci-release:
+    desc: Create a GitHub release with changelog (CI only)
+    deps: [tools]
+    requires:
+      vars:
+        - RELEASE_VERSION
+    generates:
+      - "{{ .CHANGELOG }}"
+    cmds:
+      - "{{ .CHRONICLE }} -vv --until-tag {{ .RELEASE_VERSION }} > {{ .CHANGELOG }}"
+      - "{{ .GH }} release create {{ .RELEASE_VERSION }} --title {{ .RELEASE_VERSION }} --notes-file {{ .CHANGELOG }} --verify-tag --target $(git rev-parse HEAD)"
