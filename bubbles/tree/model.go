@@ -155,12 +155,12 @@ func (m Model) renderNode(siblingIdx int, id string, observed *strset.Set, depth
 
 	// handle indentation and prefixes for each level
 
-	for i := range depth {
+	for i, isIndent := range path[:depth] {
 		if m.RootsWithoutPrefix && i == 0 {
 			prefix.WriteString(m.Padding)
 			continue
 		}
-		if path[i] {
+		if isIndent {
 			prefix.WriteString(m.Indent)
 		} else {
 			prefix.WriteString(m.Branch)
