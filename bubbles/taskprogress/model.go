@@ -289,7 +289,7 @@ func (m Model) View() string {
 
 	if len(m.context) > 0 {
 		width := m.WindowSize.Width - (len(stripansi.Strip(beforeProgress+afterProgress)) + progressBarWidth)
-		afterProgress += m.ContextStyle.Width(width).Align(lipgloss.Right).Render(strings.Join(m.context, " ") + " ")
+		afterProgress += m.ContextStyle.Width(width).Align(lipgloss.Right).Render(strings.Join(m.context, " "))
 	}
 
 	if m.completed {
