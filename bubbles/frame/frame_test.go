@@ -182,16 +182,14 @@ func TestFrame_View_WithFooter(t *testing.T) {
 
 	viewOutput := m.View()
 
-	assert.Contains(t, viewOutput, "visible")
-	assert.Contains(t, viewOutput, "log line 1")
-	assert.Contains(t, viewOutput, "log line 2")
+	assert.Equal(t, "visible\nlog line 1\nlog line 2\n", viewOutput)
 }
 
 func TestFrame_View_WithTruncatedFooter(t *testing.T) {
 	frame := New()
 	frame.ShowFooter(true)
 	frame.TruncateFooter(true)
-	frame.windowSize = tea.WindowSizeMsg{Height: 2} // but there are 3 lines!
+	frame.windowSize = tea.WindowSizeMsg{Height: 3} // room for the model, one log line, and the trailing blank row
 	model := mockVisibleTerminalModel{view: "visible", isHidden: false, isAlive: true}
 
 	frame.AppendModel(model)
@@ -201,9 +199,86 @@ func TestFrame_View_WithTruncatedFooter(t *testing.T) {
 
 	viewOutput := m.View()
 
-	assert.Contains(t, viewOutput, "visible")
-	assert.Contains(t, viewOutput, "log line 3")
-	assert.NotContains(t, viewOutput, "log line 1")
+	assert.Equal(t, "visible\nlog line 3\n", viewOutput)
+}
+
+func TestFrame_View_FooterLayout(t *testing.T) {
+	tests := []struct {
+		name     string
+		views    []string
+		footer   string
+		truncate bool
+		height   int
+		want     string
+	}{
+		{
+			name:     "every row is newline terminated",
+			views:    []string{"visible"},
+			truncate: true,
+			height:   5,
+			want:     "visible\n",
+		},
+		{
+			name:     "no models means no leading newline",
+			footer:   "log line 1\nlog line 2",
+			truncate: true,
+			height:   5,
+			want:     "log line 1\nlog line 2\n",
+		},
+		{
+			name:     "trailing newline in footer does not cost a row",
+			views:    []string{"visible"},
+			footer:   "log line 1\nlog line 2\nlog line 3\n",
+			truncate: true,
+			height:   4,
+			want:     "visible\nlog line 2\nlog line 3\n",
+		},
+		{
+			name:     "blank footer lines are dropped",
+			views:    []string{"visible"},
+			footer:   "\nlog line 1\n\nlog line 2\n",
+			truncate: false,
+			want:     "visible\nlog line 1\nlog line 2\n",
+		},
+		{
+			name:     "multi-line and multiple models count every row",
+			views:    []string{"a\nb", "c"},
+			footer:   "log line 1\nlog line 2",
+			truncate: true,
+			height:   5,
+			want:     "a\nb\nc\nlog line 2\n",
+		},
+		{
+			name:     "models taller than the window hide the footer",
+			views:    []string{"a\nb\nc"},
+			footer:   "log line 1\nlog line 2",
+			truncate: true,
+			height:   2,
+			want:     "a\nb\nc\n",
+		},
+		{
+			name:     "no window size yet hides the footer",
+			views:    []string{"visible"},
+			footer:   "log line 1\nlog line 2",
+			truncate: true,
+			want:     "visible\n",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			frame := New()
+			frame.TruncateFooter(tt.truncate)
+			frame.windowSize = tea.WindowSizeMsg{Height: tt.height}
+			for _, v := range tt.views {
+				frame.AppendModel(mockVisibleTerminalModel{view: v, isHidden: false, isAlive: true})
+			}
+			frame.Footer().Write([]byte(tt.footer))
+
+			m, _ := frame.Update(nil)
+
+			assert.Equal(t, tt.want, m.View())
+		})
+	}
 }
 
 func TestFrame_View_NoFooter(t *testing.T) {
