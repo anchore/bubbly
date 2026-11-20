@@ -5,7 +5,7 @@ import (
 	"io"
 	"strings"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 )
 
 // VisibleElement allows UI elements to be conditionally hidden, but still present in the model state
@@ -99,7 +99,7 @@ func (f *Frame) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if p, ok := f.models[i].model.(ImprintableElement); ok && p.ShouldImprint() {
 			f.models[i].expired = true
 
-			cmd := tea.Printf("%s", f.models[i].model.View())
+			cmd := tea.Printf("%s", f.models[i].model.View().Content)
 			cmds = append(cmds, cmd)
 		}
 	}
@@ -115,7 +115,11 @@ func (f *Frame) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return f, tea.Batch(cmds...)
 }
 
-func (f Frame) View() string {
+func (f Frame) View() tea.View {
+	return tea.NewView(f.render())
+}
+
+func (f Frame) render() string {
 	// all UI elements and log events are collected as rows and joined once, so every row (including the first
 	// footer row) starts on its own line and the row count matches what the renderer draws
 	var lines []string
@@ -123,7 +127,7 @@ func (f Frame) View() string {
 		if p.hidden {
 			continue
 		}
-		rendered := p.model.View()
+		rendered := p.model.View().Content
 		if len(rendered) > 0 {
 			lines = append(lines, strings.Split(rendered, "\n")...)
 		}

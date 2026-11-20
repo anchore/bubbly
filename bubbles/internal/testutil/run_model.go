@@ -1,12 +1,13 @@
 package testutil
 
 import (
+	"bytes"
 	"fmt"
 	"reflect"
 	"testing"
-	"unsafe"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
+	"github.com/charmbracelet/colorprofile"
 )
 
 func RunModel(_ testing.TB, m tea.Model, iterations int, message tea.Msg) string {
@@ -29,37 +30,30 @@ func RunModel(_ testing.TB, m tea.Model, iterations int, message tea.Msg) string
 		}
 		cmd = tea.Batch(nextCmds...)
 	}
-	return m.View()
+	return render(m.View().Content)
+}
+
+// render downsamples the view the same way a bubbletea v2 program does when its output is not a terminal. Unlike
+// lipgloss v1, lipgloss v2 always emits colors and leaves it to the program's renderer to strip them.
+func render(s string) string {
+	var buf bytes.Buffer
+	w := colorprofile.Writer{Forward: &buf, Profile: colorprofile.NoTTY}
+	_, _ = w.WriteString(s)
+	return buf.String()
 }
 
 func flatten(p tea.Msg) (msgs []tea.Msg) {
 	if p == nil {
 		return nil
 	}
-	if reflect.TypeOf(p).Name() == "batchMsg" {
-		partials := extractBatchMessages(p)
-		for _, m := range partials {
-			msgs = append(msgs, flatten(m)...)
+	if batch, ok := p.(tea.BatchMsg); ok {
+		for _, c := range batch {
+			if c == nil {
+				continue
+			}
+			msgs = append(msgs, flatten(c())...)
 		}
-	} else {
-		msgs = []tea.Msg{p}
+		return msgs
 	}
-	return msgs
-}
-
-func extractBatchMessages(m tea.Msg) (ret []tea.Msg) {
-	sliceMsgType := reflect.SliceOf(reflect.TypeFor[tea.Cmd]())
-	value := reflect.ValueOf(m) // note: this is technically unaddressable
-
-	// make our own instance that is addressable
-	valueCopy := reflect.New(value.Type()).Elem()
-	valueCopy.Set(value)
-
-	cmds := reflect.NewAt(sliceMsgType, unsafe.Pointer(valueCopy.UnsafeAddr())).Elem()
-	for i := 0; i < cmds.Len(); i++ {
-		item := cmds.Index(i)
-		r := item.Call(nil)
-		ret = append(ret, r[0].Interface().(tea.Msg))
-	}
-	return ret
+	return []tea.Msg{p}
 }

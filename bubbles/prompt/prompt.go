@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"strings"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 	"github.com/erikgeiser/promptkit/textinput"
 
-	"github.com/anchore/bubbly"
+	"github.com/anchore/bubbly/v2"
 )
 
 type Prompt struct {
@@ -54,8 +54,8 @@ func New(prompter bubbly.PromptWriter) *Prompt {
 	return teaModel
 }
 
-func (m *Prompt) View() string {
-	return strings.TrimRight(m.Model.View(), "\n")
+func (m *Prompt) View() tea.View {
+	return tea.NewView(strings.TrimRight(m.Model.View().Content, "\n"))
 }
 
 func (m *Prompt) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -64,7 +64,7 @@ func (m *Prompt) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 
 	switch msg := msg.(type) { //nolint:gocritic
-	case tea.KeyMsg:
+	case tea.KeyPressMsg:
 		if msg.String() == "enter" {
 			v, err := m.value()
 			if err != nil {

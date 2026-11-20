@@ -5,10 +5,10 @@ import (
 	"strings"
 	"sync"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 	"github.com/scylladb/go-set/strset"
 
-	"github.com/anchore/bubbly"
+	"github.com/anchore/bubbly/v2"
 )
 
 var _ tea.Model = (*Model)(nil)
@@ -110,7 +110,11 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, cmds
 }
 
-func (m Model) View() string {
+func (m Model) View() tea.View {
+	return tea.NewView(m.render())
+}
+
+func (m Model) render() string {
 	sb := strings.Builder{}
 
 	observed := strset.New()
@@ -176,7 +180,7 @@ func (m Model) renderNode(siblingIdx int, id string, observed *strset.Set, depth
 	sb := strings.Builder{}
 
 	// add the node's view
-	current := node.View()
+	current := node.View().Content
 	if len(current) > 0 {
 		sb.WriteString(m.prefixLines(current, prefix.String(), m.hasChildren(id)))
 		sb.WriteString("\n")

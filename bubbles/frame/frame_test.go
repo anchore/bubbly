@@ -3,7 +3,7 @@ package frame
 import (
 	"testing"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -22,8 +22,8 @@ func (m mockModel) Update(_ tea.Msg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
-func (m mockModel) View() string {
-	return m.view
+func (m mockModel) View() tea.View {
+	return tea.NewView(m.view)
 }
 
 type mockTerminalElement struct {
@@ -120,8 +120,8 @@ func (m mockVisibleTerminalModel) Update(_ tea.Msg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
-func (m mockVisibleTerminalModel) View() string {
-	return m.view
+func (m mockVisibleTerminalModel) View() tea.View {
+	return tea.NewView(m.view)
 }
 
 func (m mockVisibleTerminalModel) IsHidden() bool {
@@ -144,7 +144,7 @@ func TestFrame_View_HiddenElement(t *testing.T) {
 
 	m, _ := frame.Update(nil)
 
-	assert.Empty(t, m.View())
+	assert.Empty(t, m.View().Content)
 }
 
 func TestFrame_View_VisibleElement(t *testing.T) {
@@ -155,7 +155,7 @@ func TestFrame_View_VisibleElement(t *testing.T) {
 
 	m, _ := frame.Update(nil)
 
-	assert.Contains(t, m.View(), "visible")
+	assert.Contains(t, m.View().Content, "visible")
 }
 
 func TestFrame_View_DeadElement(t *testing.T) {
@@ -166,7 +166,7 @@ func TestFrame_View_DeadElement(t *testing.T) {
 
 	m, _ := frame.Update(nil)
 
-	assert.NotContains(t, m.View(), "should not be seen")
+	assert.NotContains(t, m.View().Content, "should not be seen")
 }
 
 func TestFrame_View_WithFooter(t *testing.T) {
@@ -180,7 +180,7 @@ func TestFrame_View_WithFooter(t *testing.T) {
 
 	m, _ := frame.Update(nil)
 
-	viewOutput := m.View()
+	viewOutput := m.View().Content
 
 	assert.Equal(t, "visible\nlog line 1\nlog line 2\n", viewOutput)
 }
@@ -197,7 +197,7 @@ func TestFrame_View_WithTruncatedFooter(t *testing.T) {
 
 	m, _ := frame.Update(nil)
 
-	viewOutput := m.View()
+	viewOutput := m.View().Content
 
 	assert.Equal(t, "visible\nlog line 3\n", viewOutput)
 }
@@ -276,7 +276,7 @@ func TestFrame_View_FooterLayout(t *testing.T) {
 
 			m, _ := frame.Update(nil)
 
-			assert.Equal(t, tt.want, m.View())
+			assert.Equal(t, tt.want, m.View().Content)
 		})
 	}
 }
@@ -291,7 +291,7 @@ func TestFrame_View_NoFooter(t *testing.T) {
 
 	m, _ := frame.Update(nil)
 
-	viewOutput := m.View()
+	viewOutput := m.View().Content
 
 	assert.Contains(t, viewOutput, "visible")
 	assert.NotContains(t, viewOutput, "log line 1")

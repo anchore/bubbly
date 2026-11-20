@@ -1,7 +1,7 @@
 package taskprogress
 
 import (
-	"github.com/charmbracelet/lipgloss"
+	"charm.land/lipgloss/v2"
 	"github.com/wagoodman/go-progress"
 )
 
@@ -33,8 +33,8 @@ func WithNoStyle() Option {
 		m.FailedStyle = lipgloss.NewStyle()
 		m.HintStyle = lipgloss.NewStyle()
 		m.TitleStyle = lipgloss.NewStyle()
-		m.ProgressBar.FullColor = ""
-		m.ProgressBar.EmptyColor = ""
+		m.ProgressBar.FullColor = nil
+		m.ProgressBar.EmptyColor = nil
 		m.ProgressBar.Full = '|'
 		m.ProgressBar.Empty = '-'
 	}

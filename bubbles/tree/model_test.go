@@ -3,12 +3,12 @@ package tree
 import (
 	"testing"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 	"github.com/gkampitakis/go-snaps/snaps"
 	"github.com/stretchr/testify/require"
 
-	"github.com/anchore/bubbly"
-	"github.com/anchore/bubbly/bubbles/internal/testutil"
+	"github.com/anchore/bubbly/v2"
+	"github.com/anchore/bubbly/v2/bubbles/internal/testutil"
 )
 
 var _ bubbly.VisibleModel = (*dummyViewer)(nil)
@@ -30,8 +30,8 @@ func (d dummyViewer) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return d, nil
 }
 
-func (d dummyViewer) View() string {
-	return d.state
+func (d dummyViewer) View() tea.View {
+	return tea.NewView(d.state)
 }
 
 func TestModel_View(t *testing.T) {

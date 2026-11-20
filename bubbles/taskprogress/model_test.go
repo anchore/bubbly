@@ -6,12 +6,12 @@ import (
 	"testing"
 	"time"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 	"github.com/gkampitakis/go-snaps/snaps"
 	"github.com/stretchr/testify/require"
 	"github.com/wagoodman/go-progress"
 
-	"github.com/anchore/bubbly/bubbles/internal/testutil"
+	"github.com/anchore/bubbly/v2/bubbles/internal/testutil"
 )
 
 func subject(t testing.TB) (*progress.Manual, *progress.Stage, Model) {

@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 	"github.com/stretchr/testify/assert"
 	"github.com/wagoodman/go-partybus"
 )
@@ -26,8 +26,8 @@ func (d dummyModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return d, nil
 }
 
-func (d dummyModel) View() string {
-	return d.id
+func (d dummyModel) View() tea.View {
+	return tea.NewView(d.id)
 }
 
 func dummyMsg(s any) tea.Cmd {
